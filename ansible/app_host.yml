@@ -1,0 +1,28 @@
+---
+- hosts: application_host
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Start and enable Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Deploy the metrics exporter container
+      docker_container:
+        name: exporter
+        image: exporter:latest
+        state: started
+        ports:
+          - "8000:8000"
+
+    - name: Configure firewall to allow Prometheus to scrape metrics
+      ufw:
+        rule: allow
+        port: 8000
+        proto: tcp
