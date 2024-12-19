@@ -1,14 +1,17 @@
-# Use Python base image
+# Use an official Python runtime as a base image
 FROM python:3.9-slim
 
-# Set the working directory
+# Set a working directory in the container
 WORKDIR /app
 
-# Copy the Python script to the container
+# Copy the Python script into the container
 COPY exporter.py .
 
-# Install required Python packages
+# Install the required Python package
 RUN pip install prometheus_client
 
-# Set the command to run the Python script
+# Expose the port used by the Prometheus exporter
+EXPOSE 8000
+
+# Set the default command to run the script
 CMD ["python", "exporter.py"]
